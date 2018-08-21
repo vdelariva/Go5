@@ -23,53 +23,24 @@ module.exports = function(app) {
   // });
   var NewsAPI = require("newsapi");
   var newsapi = new NewsAPI(process.env.API_KEY);
+
   app.post("/api/news", function(req, res) {
-    console.log(req.body.topicSearched);
-    var arrayObj = {
-      articleTitleArray: [],
-      articleUrlArray: []
-    };
     newsapi.v2
-      .everything({
-        q: req.body.topicSearched,
-        sources: req.body.source,
-        sortBy: "relevancy",
+      // .everything({
+      .topHeadlines({
+        // q: req.body.topicSearched,
+        // category: req.body.category,
+        sources: "fox-news,cnn,the-washington-post,bbc-news,bloomberg,the-huffington-post,the-washington-times,reuters,the-hill,the-new-york-times,associated-press",
+        // sortBy: "publishedAt",
+        // from: "2018-08-20",
+        language: "en",
+        // country: "us",
         pageSize: 5
       })
       .then(function(response) {
-        console.log(response);
-        for (var i = 0; i < response.articles.length; i++) {
-          arrayObj.articleUrlArray.push(response.articles[i].url);
-          arrayObj.articleTitleArray.push(response.articles[i].title);
-        }
-        console.log(arrayObj);
-        res.send(arrayObj);
+        var articles = response.articles;
+        console.log(`api/articles: ${JSON.stringify(articles)}`);
+        res.json(articles);
       });
-    //url parameters
-    // var url =
-    //   "https://newsapi.org/v2/everything?" +
-    //   "q=" +
-    //   req.body.topicSearched +
-    //   "&sources=" +
-    //   req.body.source +
-    //   "&sortBy=relevancy&" +
-    //   "pageSize=5&" +
-    //   "apiKey=" +
-    //   process.env.API_KEY;
-    // var req = new Request(url);
-    // fetch(req)
-    //   .then(function(response) {
-    //     console.log(response.status);
-    //     return response.json();
-    //   }) //turns the respon.json into usable data
-    //   .then(function(data) {
-    //     for (var i = 0; i < data.articles.length; i++) {
-    //       articleObj.articleUrlArray.push(data.articles[i].url);
-    //       articleObj.articleTitleArray.push(data.articles[i].title);
-    //     }
-    //     console.log(data);
-    //     console.log(articleObj);
-    //     res.send(articleObj);
-    //   });
   });
 };
