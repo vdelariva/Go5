@@ -1,26 +1,95 @@
 var db = require("../models");
 
 module.exports = function(app) {
-  // Get all examples
-  app.get("/api/examples", function(req, res) {
-    db.Example.findAll({}).then(function(dbExamples) {
-      res.json(dbExamples);
+  // Get all reviews
+  app.get("/api/reviews", function(req, res) {
+    db.Review.findAll({}).then(function(dbReview) {
+      res.json(dbReview);
     });
   });
 
-  // Create a new example
-  app.post("/api/examples", function(req, res) {
-    db.Example.create(req.body).then(function(dbExample) {
-      res.json(dbExample);
+  // Get all news sources
+  app.get("/api/sources", function(req, res) {
+    db.Source.findAll({}).then(function(dbSource) {
+      res.json(dbSource);
     });
   });
 
-  // Delete an example by id
-  // app.delete("/api/examples/:id", function(req, res) {
-  //   //db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
-  //     res.json(dbExample);
-  //   });
-  // });
+  // Get all articles
+  app.get("/api/articles", function(req, res) {
+    db.Article.findAll({}).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
+  //Get all articles for a source
+  app.get("/api/articles/source/:sourceId", function(req, res) {
+    db.Article.findAll({
+      where: {
+        SourceId: req.params.sourceId
+      }
+    }).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
+  // Get all reviews for an article
+  app.get("/api/reviews/:articleId", function(req, res) {
+    db.Review.findAll({
+      where: {
+        ArticleId: req.params.articleId
+      },
+      include: [
+        {
+          model: db.Source,
+          as: "Source"
+        },
+        {
+          model: db.Article,
+          as: "Article"
+        }
+      ]
+    }).then(function(dbReview) {
+      res.json(dbReview);
+    });
+  });
+
+  //Get all reviews for a source
+  app.get("/api/reviews/:sourceId", function(req, res) {
+    db.Review.findAll({
+      where: {
+        SurceId: req.params.sourceId
+      },
+      include: [
+        {
+          model: db.Source,
+          as: "Source"
+        },
+        {
+          model: db.Article,
+          as: "Article"
+        }
+      ]
+    }).then(function(dbReview) {
+      res.json(dbReview);
+    });
+  });
+
+  // Create a new Review
+  app.post("/api/review", function(req, res) {
+    db.Review.create(req.body).then(function(dbReview) {
+      res.json(dbReview);
+    });
+  });
+
+  //Insert a new Article
+  app.post("/api/article", function(req, res) {
+    db.Article.create(req.body).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
+  //Route to get articles for a source from external API call
   var NewsAPI = require("newsapi");
   var newsapi = new NewsAPI(process.env.API_KEY);
 
