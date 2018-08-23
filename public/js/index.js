@@ -22,15 +22,15 @@ $(document).ready(function () {
           url: "/api/news"
         }).then(function(data) {
           console.log(`*** apinews: ${JSON.stringify(data)}`);
-          // Get article text
-          getArticleText(data);
 
           // Create array of objects for bulkCreate method
           var bulkData = data.map(function(article){
             var articleObj = {
               title: article.title,
               author: article.author,
-              publishDate: article.publishedAt
+              publishDate: article.publishedAt,
+              source: article.source.name,
+              articleURL: article.url
             };
             return articleObj;
           });
@@ -44,6 +44,9 @@ $(document).ready(function () {
             data: {temp:JSON.stringify(bulkData)}
           }).then(function(data){
             console.log(`*** then data: ${JSON.stringify(data)}`);
+            // Get article text
+            getArticleText(data);
+
             displayArticles(data);
           });
         });
@@ -147,9 +150,8 @@ $(document).ready(function () {
   function displayArticles (data) {
     console.log(`displayArticles data: ${JSON.stringify(data)})`);
     var $articles = data.map(function(article) {
-      var $li = $("<li>").html(`${article.title}`)
-
-      // var $li = $("<li>").html(`<b>${article.source.name}:</b>${article.title}`)
+      // var $li = $("<li>").html(`${article.title}`)
+      var $li = $("<li>").html(`<b>${article.source}:</b> ${article.title}`)
         .attr({
           "data-toggle": "modal", 
           "data-target": "#myModal",
@@ -166,7 +168,7 @@ $(document).ready(function () {
   function getArticleText (data){
     var urls = [];
     for (var i = 0; i < data.length; i++) {
-      urls.push(data[i].url);
+      urls.push(data[i].articleURL);
     }
     console.log(urls);
     urls.forEach(function(url) {
@@ -182,29 +184,15 @@ $(document).ready(function () {
     });
   }
   //-----------------------------------------------------------------------------
-  // function addArticleText () {
-    // Update article entry in db with article text
+  // function addArticleText (articleText,id) {
+  //   // Update article entry in db with article text
+  //   $.ajax({
+  //     method: "PUT",
+  //     url: `/api/article/${id}`,
+  //     data: articleText
+  //   }).then(function (data) {
+  //     console.log(`ArticleText save: ${JSON.stringify(data)}`);
+  //   });
   // }
   //-----------------------------------------------------------------------------
-  // $("#propagandize").on("click", function(event) {
-  //   event.preventDefault();
-  //   userSelectedUrl = $("#articleDisplay")
-  //     .val()
-  //     .trim();
-  //   console.log(userSelectedUrl);
-  //   var queryURL =
-  //     "https://api.diffbot.com/v3/article?token=0150e312d481dd56d0cbd136243d2bc4&url=" +
-  //     userSelectedUrl;
-  //   $.ajax({
-  //     url: queryURL,
-  //     method: "GET"
-  //   }).then(function(response) {
-  //     console.log(response);
-  //     var textFromUrl = response.objects[0].text;
-  //     console.log(textFromUrl);
-  //     $("#textDisplay").text(textFromUrl);
-  //   });
-  // });
-  // }); Braces are for a SubmitTest function that's no longer running
-
 });

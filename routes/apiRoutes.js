@@ -103,10 +103,10 @@ module.exports = function(app) {
     });
   });
 
-  //Update an Article
+  //Update an Article, add article text
   app.put("/api/article/:id", function(req, res) {
-  console.log(req.body.articleText);
-  console.log(req.params.id);
+    console.log(req.body.articleText);
+    console.log(req.params.id);
     db.Article.update({
       articleText: req.body.articleText
     }, {
