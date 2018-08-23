@@ -2,8 +2,8 @@ $(document).ready(function () {
   ////////////
   //API CODE//
   ////////////
-
-  $(window).on("load", function (event) {
+  $(".alignRight").html(moment().format('dddd, MMMM Do, YYYY'));
+  $(window).on("load", function(event) {
     event.preventDefault();
 
     $.ajax({
@@ -13,25 +13,44 @@ $(document).ready(function () {
       //   category: category,
       //   searchDate: searchDate
       // }
-    }).then(function (data) {
-      console.log(`submitSearch: ${JSON.stringify(data)}`);
-      var $articles = data.map(function (article) {
-        var $li = $("<li>").text(article.title);
+    }).then(function(data) {
+      //console.log(`submitSearch: ${JSON.stringify(data)}`);
+      console.log(data);
+      var $articles = data.map(function(article) {
+        console.log(article);
+        var $li = $("<li>").html("<b>" + article.source.name +"</b>" + ": " + article.title)
+          .attr({
+            class: "btn btn-primary",
+            type: "submit",
+            "data-toggle": "modal", 
+            "data-target":'#myModal'
+          });
         return $li;
       });
-
+      var urls = [];
+      for (var i = 0; i < data.length; i++) {
+        urls.push(data[i].url);
+      }
+      console.log(urls);
+      urls.forEach(function(url) {
+        var queryURL =
+      "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
+      url;
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+          console.log(response.objects[0].text);//Would just need to append onto a div in the modal
+        });
+      });
       $("#currentArticles").empty();
       $("#currentArticles").append($articles);
     });
   });
 
-  // Display Modal
-  $("#testModal").on("click", function (event) {
-    event.preventDefault();
-    console.log('modal');
-    // Pop up modal to show article & survey
-    $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
-    $(".modal-body").html(`<form id='surveyForm'>`
+  // Pop up modal to show article & survey
+  $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
+  $(".modal-body").html(`<form id='surveyForm'>`
       + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
       + `<div class='form-group row mb=0'>`
       + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
@@ -59,11 +78,11 @@ $(document).ready(function () {
       + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='purpose' value=''></div>`
       + `</div></form>`);
 
-    // $("#saveChanges").attr("data-key",$(this).data("id"));
-  });
+  // $("#saveChanges").attr("data-key",$(this).data("id"));
 
-  $("#submitTest").click(function (event) {
+  $("#submitTest").on("click", function(event){
     event.preventDefault();
+
     function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
       var rating = (currency + relevance + authority + accuracy + purpose) / 5;
       return rating;
@@ -81,9 +100,9 @@ $(document).ready(function () {
       authority: authority,
       accuracy: accuracy,
       purpose: purpose,
-      ArticleId: 1009,
-      SourceId: 2,
-      comments: "This is fake news!!",
+      ArticleId: 1009, //Needs to capture value
+      SourceId: 2, //Needs to capture value
+      comments: "This is fake news!!", //Needs to capture value
       finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
     };
     console.log(JSON.stringify(review));
@@ -93,9 +112,46 @@ $(document).ready(function () {
       data: review
     }).then(function (data) {
       console.log(`ReviewSaved: ${JSON.stringify(data)}`);
-
     });
+
+    // values captured. Now I need to take these values and assign them to the article
+    articleRating(review.finalRating);
   });
+  function articleRating(finalRating) {
+    if (finalRating >= 8){
+      $("#rating").html("<img src='../images/credibleSmall.jpg'>");
+      return;
+    } else if (finalRating < 8 && finalRating >=6){
+      $("#rating").html("<img src='../images/approvedSmall.jpg'>");
+      return;
+    } else if (finalRating < 6 && finalRating >=4){
+      $("#rating").html("<img src='../images/misleadingSmall.jpg'>");
+      return;
+    } else {
+      $("#rating").html("<img src='../images/fakenewsSmall.jpg'>");
+      return;
+    }
+  }
+  // $("#propagandize").on("click", function(event) {
+  //   event.preventDefault();
+  //   userSelectedUrl = $("#articleDisplay")
+  //     .val()
+  //     .trim();
+  //   console.log(userSelectedUrl);
+  //   var queryURL =
+  //     "https://api.diffbot.com/v3/article?token=0150e312d481dd56d0cbd136243d2bc4&url=" +
+  //     userSelectedUrl;
+  //   $.ajax({
+  //     url: queryURL,
+  //     method: "GET"
+  //   }).then(function(response) {
+  //     console.log(response);
+  //     var textFromUrl = response.objects[0].text;
+  //     console.log(textFromUrl);
+  //     $("#textDisplay").text(textFromUrl);
+  //   });
+  // });
+  // }); Braces are for a SubmitTest function that's no longer running
 
 });
 

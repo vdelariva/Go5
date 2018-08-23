@@ -125,11 +125,10 @@ module.exports = function(app) {
         // from: "2018-08-20",
         language: "en",
         // country: "us",
-        pageSize: 5
+        pageSize: 2
       })
       .then(function(response) {
         var articles = response.articles;
-        console.log(`api/articles: ${JSON.stringify(articles)}`);
         res.json(articles);
       });
   });

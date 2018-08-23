@@ -21,6 +21,7 @@ module.exports = function(sequelize, DataTypes) {
         len: [1]
       }
     },
+
     articleText:{
       type: DataTypes.TEXT,
       allowNull: true,
@@ -28,6 +29,7 @@ module.exports = function(sequelize, DataTypes) {
         len: [1]
       }
     }
+
   });
   Article.associate = function(models) {
     models.Article.belongsTo(models.Source, {
