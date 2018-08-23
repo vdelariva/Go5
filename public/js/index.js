@@ -6,45 +6,51 @@ $(document).ready(function () {
   $(window).on("load", function(event) {
     event.preventDefault();
 
+    // Get today's articles from db
+    var start = moment.utc().startOf('day'); 
+    var end = moment.utc().endOf('day'); 
+
+    console.log(`start: ${start} end: ${end}`);
+    
     $.ajax({
-      method: "POST",
-      url: "/api/news",
-      // data: {
-      //   category: category,
-      //   searchDate: searchDate
-      // }
+      method: "GET",
+      url: `/api/articles/${start}/${end}`
     }).then(function(data) {
-      //console.log(`submitSearch: ${JSON.stringify(data)}`);
-      console.log(data);
-      var $articles = data.map(function(article) {
-        console.log(article);
-        var $li = $("<li>").html("<b>" + article.source.name +"</b>" + ": " + article.title)
-          .attr({
-            class: "btn btn-primary",
-            type: "submit",
-            "data-toggle": "modal", 
-            "data-target":'#myModal'
-          });
-        return $li;
-      });
-      var urls = [];
-      for (var i = 0; i < data.length; i++) {
-        urls.push(data[i].url);
-      }
-      console.log(urls);
-      urls.forEach(function(url) {
-        var queryURL =
-      "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
-      url;
+      console.log(`todays articles: ${JSON.stringify(data)}`);
+      if (data.length === 0){
+        // Get today's headlines
         $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function(response) {
-          console.log(response.objects[0].text);//Would just need to append onto a div in the modal
+          method: "POST",
+          url: "/api/news"
+        }).then(function(data) {
+          console.log(`apinews: ${JSON.stringify(data)}`);
+          // Save articles to db OPTION 1 bulkCreate
+
+          // Create array of objects
+          var bulkData = data.map(function(article){
+            var articleObj = {
+              title: article.title,
+              author: article.author,
+              publishDate: article.publishedAt
+            };
+            return articleObj;
+          });
+
+          var strBulkData = JSON.stringify(bulkData);
+          console.log(`Option 1 stringify bulkData: ${strBulkData}`);
+
+          $.ajax({
+            method: "POST",
+            url: "/api/articles",
+            data: {temp:JSON.stringify(bulkData)}
+          }).then(function(data){
+            console.log(`Option 1 then data: ${JSON.stringify(data)}`);
+            displayArticles(data);
+          });
         });
-      });
-      $("#currentArticles").empty();
-      $("#currentArticles").append($articles);
+      } else {
+        displayArticles(data);
+      }
     });
   });
 
@@ -82,7 +88,6 @@ $(document).ready(function () {
 
   $("#submitTest").on("click", function(event){
     event.preventDefault();
-
     function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
       var rating = (currency + relevance + authority + accuracy + purpose) / 5;
       return rating;
@@ -117,6 +122,7 @@ $(document).ready(function () {
     // values captured. Now I need to take these values and assign them to the article
     articleRating(review.finalRating);
   });
+
   function articleRating(finalRating) {
     if (finalRating >= 8){
       $("#rating").html("<img src='../images/credibleSmall.jpg'>");
@@ -132,6 +138,39 @@ $(document).ready(function () {
       return;
     }
   }
+
+  function displayArticles (data) {
+    console.log(`displayArticles data: ${JSON.stringify(data)})`);
+    var $articles = data.map(function(article) {
+      var $li = $("<li>").html("<b>" + article.source.name +"</b>" + ": " + article.title)
+        .attr({
+          class: "btn btn-primary",
+          type: "submit",
+          "data-toggle": "modal", 
+          "data-target":'#myModal'
+        });
+      return $li;
+    });
+    var urls = [];
+    for (var i = 0; i < data.length; i++) {
+      urls.push(data[i].url);
+    }
+    console.log(urls);
+    urls.forEach(function(url) {
+      var queryURL =
+      "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
+      url;
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response) {
+        console.log(response.objects[0].text);//Would just need to append onto a div in the modal
+      });
+    });
+    $("#currentArticles").empty();
+    $("#currentArticles").append($articles);
+  }
+
   // $("#propagandize").on("click", function(event) {
   //   event.preventDefault();
   //   userSelectedUrl = $("#articleDisplay")

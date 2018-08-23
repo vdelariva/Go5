@@ -1,5 +1,7 @@
 var db = require("../models");
 
+const Op = db.Sequelize.Op;
+
 module.exports = function(app) {
   // Get all reviews
   app.get("/api/reviews", function(req, res) {
@@ -27,6 +29,18 @@ module.exports = function(app) {
     db.Article.findAll({
       where: {
         SourceId: req.params.sourceId
+      }
+    }).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
+  //Get all articles for a specific date
+  app.get("/api/articles/:start/:end", function(req, res) {
+    console.log(`api start: ${req.params.start}`);
+    db.Article.findAll({
+      where: {
+        publish_date: {[Op.between]:[req.params.start,req.params.end]}
       }
     }).then(function(dbArticle) {
       res.json(dbArticle);
@@ -84,13 +98,13 @@ module.exports = function(app) {
 
   //Insert a new Article
   app.post("/api/article", function(req, res) {
+    console.log(`article post: ${JSON.stringify(req.body)}`);
     db.Article.create(req.body).then(function(dbArticle) {
       res.json(dbArticle);
     });
   });
 
   //Update an Article
-  
   app.put("/api/article/:id", function(req, res) {
   console.log(req.body.articleText);
   console.log(req.params.id);
@@ -110,19 +124,28 @@ module.exports = function(app) {
     });
   });
 
+  //Insert new Articles
+  app.post("/api/articles", function(req, res) {
+  // console.log(`articles body: ${req.body}`);
+    console.log("test body");
+    console.log(req.body);
+    var newBody = req.body.temp;
+    console.log("newbody");
+    console.log(newBody);
+
+    db.Article.bulkCreate(JSON.parse(newBody)).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
   //Route to get articles for a source from external API call
   var NewsAPI = require("newsapi");
   var newsapi = new NewsAPI(process.env.API_KEY);
 
   app.post("/api/news", function(req, res) {
     newsapi.v2
-      // .everything({
       .topHeadlines({
-        // q: req.body.topicSearched,
-        // category: req.body.category,
         sources: "fox-news,cnn,the-washington-post,bbc-news,bloomberg,the-huffington-post,the-washington-times,reuters,the-hill,the-new-york-times,associated-press",
-        // sortBy: "publishedAt",
-        // from: "2018-08-20",
         language: "en",
         // country: "us",
         pageSize: 2
