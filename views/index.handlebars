@@ -2,41 +2,129 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>{{msg}}</h1>
-        <h2>News Source Credibility Checker</h2>
+        <h2>THE CRED-CHECKER DAILY</h2>
+        <hr>
+        <div class="issuance">
+          <p class="alignLeft">Issue 1.0 Volume 1.0</p>
+          <p class="alignRight"></p>
+        </div>
         <hr>
       </div>
     </div>
-{{!-- <iframe id="iframe" src="http://www.google.com"></iframe> --}}
     <div class="row">
-      <div class="col">
-        <h3>Today's Headlines</h3>
-        <div id="currentArticles"></div>
-        <hr>
+      <div class="col-md-6">
+        <h3>Breaking headlines everywhere! One source says this - the other says that! What to believe?!?!</h3>
+        <p></p>
+        <p class="headliner">Not to worry! The Cred-Checker Daily is here! Read popular articles and give your cred-checking
+          assessment for each article you read! It's time to hold the fake news participants accountable! Get started by using the Cred-Checker now!</p>
+        <p></p>
+        <p class="headlinerAuthor">Written by: The Cred-Checker Daily</p>
+      </div>
+      <div class="col-md-6" style="display:table-cell; vertical-align:middle; text-align:center">
+        <img class="imageBorder" src="../../images/credibleMedium.jpg">
+      </div>
+      
+    </div>
+    <hr>
+    <div class="card card-image" style="background-image: url('../../images/Newspapers.jpg');">
+
+      <div class="rgba-black-strong py-5 px-3">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-12 col-xl-12">
+            <!--Accordion wrapper-->
+            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+              <!-- Accordion card -->
+              <div class="card">
+
+                <!-- Card header -->
+                <div class="card-header" role="tab" id="headingOne1">
+                  <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
+                    <h5 class="mb-0">
+                      Current Headlines <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                  </a>
+                </div>
+
+                <!-- Card body -->
+                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                  <div class="card-body">
+                    <div id="currentArticles"></div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- Accordion card -->
+
+              <!-- Accordion card -->
+              <div class="card">
+
+                <!-- Card header -->
+                <div class="card-header" role="tab" id="headingTwo2">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                    <h5 class="mb-0">
+                      Search <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                  </a>
+                </div>
+
+                <!-- Card body -->
+                <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                  <div class="card-body">
+                    <form>
+                      <div class="form-group row">
+                        <label for="searchDate" class="col-2 col-form-label">Search Date</label>
+                        <div class="col-3">
+                          <input type="date" class="form-control" id="searchDate" placeholder="">
+                        </div>
+                        <div class="col-2">
+                          <button id="submitSearch" class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+              </div>
+              <!-- Accordion card -->
+
+              <!-- Accordion card -->
+              <div class="card">
+
+                <!-- Card header -->
+                <div class="card-header" role="tab" id="headingThree3">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+                    <h5 class="mb-0">
+                      Previously Viewed <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                  </a>
+                </div>
+
+                <!-- Card body -->
+                <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3" data-parent="#accordionEx">
+                  <div class="card-body">
+                    {{!-- // Previously reviewed articles from db --}}
+                    <ul id="article-list">
+                      {{#each articles}}
+                      <li data-id="" class="list-group-item">
+                        <a href="article/">{{this.title}}</a>
+                        {{!-- <button class="btn btn-danger float-right delete">ｘ</button> --}}
+                      </li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+              <!-- Accordion card -->
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <form>
-      <div class="form-group row">
-        <label for="searchDate" class="col-2 col-form-label">Search Date</label>
-        <div class="col-3">
-          <input type="date" class="form-control" id="searchDate" placeholder="">
-        </div>
-        <div class="col-2">
-          <button id="submitSearch" class="btn btn-primary" type="submit">Submit</button>
-        </div>
-      </div>
-    </form>
-    <hr>
-    {{!-- // Previously reviewed articles from db --}}
-    <ul id="article-list">
-      {{#each articles}}
-        <li data-id="" class="list-group-item">
-          <a href="article/">{{this.title}}</a>
-          {{!-- <button class="btn btn-danger float-right delete">ｘ</button> --}}
-        </li>
-      {{/each}}
-    </ul>
-    <hr>
+    <!-- Accordion wrapper -->
+    <div id="rating"></div>
     <button id="testModal" class="btn btn-primary" type="submit" data-toggle="modal" data-target='#myModal'>Modal</button>
 
     {{!-- Modal --}}
@@ -57,6 +145,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>

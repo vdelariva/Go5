@@ -16,3 +16,57 @@
     width: 900px;
   }
 }
+@font-face {
+  font-family: 'cf_nelsonoldnewspaperregular';
+  src: url("./CFNelsonOldNewsPaper.ttf"),
+       url('cfnelsonoldnewspaper.woff2') format('woff2'),
+       url('cfnelsonoldnewspaper.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+h2 {
+  font-family: "cf_nelsonoldnewspaperregular";
+  font-weight: normal;
+  font-style: normal;
+  text-align: center;
+  font-size: 5rem;
+}
+body {
+  background-color: rgb(243, 241, 241);
+}
+.issuance {
+  font-family: 'Sriracha', cursive;
+  font-size: 12px;
+  display: flex;
+  margin-top: -10px;
+  margin-bottom: -25px;
+}
+.alignLeft {
+	margin-right: auto;;
+}
+.alignRight {
+	margin-left: auto;
+}
+h3 {
+  font-size: 20px;
+  font-family: 'Sriracha', cursive;
+}
+.headliner {
+  font-size: 15px;
+  font-family: 'Sriracha', cursive;
+}
+.headlinerAuthor {
+  font-size: 12px;
+  font-family: 'Sriracha', cursive;
+}
+.imageBorder {
+  border: 3px groove rgb(243, 241, 241);
+}
+.mb-0 {
+  font-size: 20px;
+  font-family: 'Sriracha', cursive;
+  color: rgb(112, 112, 112);
+}
+.card-body, .card-header, .modal-content {
+  background-color: rgb(243, 241, 241);
+}
