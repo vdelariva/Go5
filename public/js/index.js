@@ -46,7 +46,6 @@ $(document).ready(function () {
             console.log(`*** then data: ${JSON.stringify(data)}`);
             // Get article text
             getArticleText(data);
-
             displayArticles(data);
           });
         });
@@ -58,38 +57,48 @@ $(document).ready(function () {
   });
   
   //-----------------------------------------------------------------------------
+  $(document).on("click", ".article", function(event){
+    event.preventDefault();
 
-  // Pop up modal to show article & survey
-  $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
-  $(".modal-body").html(`<form id='surveyForm'>`
-      + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
-      + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='currency' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
-      + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='relevance' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
-      + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='authority' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
-      + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='accuracy' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
-      + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control' id='purpose' value=''></div>`
-      + `</div></form>`);
+    // var newArticle = getArticleText($(this).attr("data-url"));
+    // console.log(`newArticle: ${newArticle}`);
 
+    // Pop up modal to show article & survey
+    $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
+    $(".modal-body").html(`<form id='surveyForm'>`
+        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
+          + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
+          + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
+          + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
+          + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
+          + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
+          + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
+        + `</div>`
+        + `</form>`);
   // $("#saveChanges").attr("data-key",$(this).data("id"));
+  });
   //-----------------------------------------------------------------------------
 
   $("#submitTest").on("click", function(event){
@@ -104,6 +113,7 @@ $(document).ready(function () {
     var authority = parseInt($("#authority").val());
     var accuracy = parseInt($("#accuracy").val());
     var purpose = parseInt($("#purpose").val());
+    var comments = $("#comments").val().trim();
 
     var review = {
       currency: currency,
@@ -113,7 +123,7 @@ $(document).ready(function () {
       purpose: purpose,
       ArticleId: 1009, //Needs to capture value
       SourceId: 2, //Needs to capture value
-      comments: "This is fake news!!", //Needs to capture value
+      comments: comments, //Needs to capture value
       finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
     };
     console.log(JSON.stringify(review));
@@ -155,7 +165,9 @@ $(document).ready(function () {
         .attr({
           "data-toggle": "modal", 
           "data-target": "#myModal",
-          "data-id": article.id
+          "data-id": article.id,
+          "class": "article",
+          "data-url": article.articleURL
         });
       return $li;
     });
@@ -166,33 +178,37 @@ $(document).ready(function () {
   //-----------------------------------------------------------------------------
   // Get article text using diffbot api
   function getArticleText (data){
-    var urls = [];
-    for (var i = 0; i < data.length; i++) {
-      urls.push(data[i].articleURL);
-    }
-    console.log(urls);
-    urls.forEach(function(url) {
+    data.forEach(function(article) {
       var queryURL =
       "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
-      url;
+      article.articleURL;
+      console.log(`URL: ${queryURL}`);
       $.ajax({
         url: queryURL,
         method: "GET"
       }).then(function(response) {
-        console.log(response.objects[0].text);//Would just need to append onto a div in the modal
+        console.log(`diffbot response: ${response.objects[0].text}`);//Would just need to append onto a div in the modal
+        console.log(`******* data: ${JSON.stringify(data)}`);
+        console.log(`dataId: ${article.id}`);
+        // setTimeout(addArticleText(response.objects[0].text, stuff.id),10000);
+        return response.objects[0].text;
       });
     });
+    addArticleText();
+    // displayArticles(data);
   }
   //-----------------------------------------------------------------------------
-  // function addArticleText (articleText,id) {
-  //   // Update article entry in db with article text
-  //   $.ajax({
-  //     method: "PUT",
-  //     url: `/api/article/${id}`,
-  //     data: articleText
-  //   }).then(function (data) {
-  //     console.log(`ArticleText save: ${JSON.stringify(data)}`);
-  //   });
-  // }
+  function addArticleText (articleText,id) {
+    // Update article entry in db with article text
+    // console.log(`addArticle id: ${id}`);
+    console.log(`addArticle articleText: ${articleText}`);
+    $.ajax({
+      method: "PUT",
+      url: `/api/article/${id}`,
+      data: articleText
+    }).then(function (data) {
+      console.log(`ArticleText save: ${JSON.stringify(data)}`);
+    });
+  }
   //-----------------------------------------------------------------------------
 });
