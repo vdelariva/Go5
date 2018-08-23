@@ -1,32 +1,31 @@
 $(document).ready(function () {
-  ////////////
-  //API CODE//
-  ////////////
+  //API CODE
+  //-----------------------------------------------------------------------------
   $(".alignRight").html(moment().format('dddd, MMMM Do, YYYY'));
   $(window).on("load", function(event) {
     event.preventDefault();
 
     // Get today's articles from db
-    var start = moment.utc().startOf('day'); 
-    var end = moment.utc().endOf('day'); 
+    var start = moment.utc().startOf('day').format(); 
+    var end = moment.utc().endOf('day').format();
 
-    console.log(`start: ${start} end: ${end}`);
-    
     $.ajax({
       method: "GET",
       url: `/api/articles/${start}/${end}`
     }).then(function(data) {
       console.log(`todays articles: ${JSON.stringify(data)}`);
+      // If today's articles have not be posted, request from newsapi
       if (data.length === 0){
         // Get today's headlines
         $.ajax({
           method: "POST",
           url: "/api/news"
         }).then(function(data) {
-          console.log(`apinews: ${JSON.stringify(data)}`);
-          // Save articles to db OPTION 1 bulkCreate
+          console.log(`*** apinews: ${JSON.stringify(data)}`);
+          // Get article text
+          getArticleText(data);
 
-          // Create array of objects
+          // Create array of objects for bulkCreate method
           var bulkData = data.map(function(article){
             var articleObj = {
               title: article.title,
@@ -37,22 +36,25 @@ $(document).ready(function () {
           });
 
           var strBulkData = JSON.stringify(bulkData);
-          console.log(`Option 1 stringify bulkData: ${strBulkData}`);
-
+          console.log(`*** Stringify bulkData: ${strBulkData}`);
+          // Post new articles to db
           $.ajax({
             method: "POST",
             url: "/api/articles",
             data: {temp:JSON.stringify(bulkData)}
           }).then(function(data){
-            console.log(`Option 1 then data: ${JSON.stringify(data)}`);
+            console.log(`*** then data: ${JSON.stringify(data)}`);
             displayArticles(data);
           });
         });
       } else {
+        // Display articles from db
         displayArticles(data);
       }
     });
   });
+  
+  //-----------------------------------------------------------------------------
 
   // Pop up modal to show article & survey
   $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
@@ -85,6 +87,7 @@ $(document).ready(function () {
       + `</div></form>`);
 
   // $("#saveChanges").attr("data-key",$(this).data("id"));
+  //-----------------------------------------------------------------------------
 
   $("#submitTest").on("click", function(event){
     event.preventDefault();
@@ -123,6 +126,7 @@ $(document).ready(function () {
     articleRating(review.finalRating);
   });
 
+  //-----------------------------------------------------------------------------
   function articleRating(finalRating) {
     if (finalRating >= 8){
       $("#rating").html("<img src='../images/credibleSmall.jpg'>");
@@ -139,18 +143,27 @@ $(document).ready(function () {
     }
   }
 
+  //-----------------------------------------------------------------------------
   function displayArticles (data) {
     console.log(`displayArticles data: ${JSON.stringify(data)})`);
     var $articles = data.map(function(article) {
-      var $li = $("<li>").html("<b>" + article.source.name +"</b>" + ": " + article.title)
+      var $li = $("<li>").html(`${article.title}`)
+
+      // var $li = $("<li>").html(`<b>${article.source.name}:</b>${article.title}`)
         .attr({
-          class: "btn btn-primary",
-          type: "submit",
           "data-toggle": "modal", 
-          "data-target":'#myModal'
+          "data-target": "#myModal",
+          "data-id": article.id
         });
       return $li;
     });
+    $("#currentArticles").empty();
+    $("#currentArticles").append($articles);
+  }
+
+  //-----------------------------------------------------------------------------
+  // Get article text using diffbot api
+  function getArticleText (data){
     var urls = [];
     for (var i = 0; i < data.length; i++) {
       urls.push(data[i].url);
@@ -167,10 +180,12 @@ $(document).ready(function () {
         console.log(response.objects[0].text);//Would just need to append onto a div in the modal
       });
     });
-    $("#currentArticles").empty();
-    $("#currentArticles").append($articles);
   }
-
+  //-----------------------------------------------------------------------------
+  function addArticleText () {
+    // Update article entry in db with article text
+  }
+  //-----------------------------------------------------------------------------
   // $("#propagandize").on("click", function(event) {
   //   event.preventDefault();
   //   userSelectedUrl = $("#articleDisplay")
@@ -193,7 +208,3 @@ $(document).ready(function () {
   // }); Braces are for a SubmitTest function that's no longer running
 
 });
-
-////////////////////////////
-//No longer using this API//
-////////////////////////////
