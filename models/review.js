@@ -1,42 +1,46 @@
 module.exports = function(sequelize, DataTypes) {
   var Review = sequelize.define("Review", {
-    answer1: {
-      type: DataTypes.STRING,
+    currency: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    answer2: {
-      type: DataTypes.STRING,
+    relevance: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    answer3: {
-      type: DataTypes.STRING,
+    authority: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    answer4: {
-      type: DataTypes.STRING,
+    accuracy: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    answer5: {
-      type: DataTypes.STRING,
+    purpose: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    final_rating: {
+    comments: {
       type: DataTypes.STRING,
+      allowNull: true
+    },
+    finalRating: {
+      type: DataTypes.DECIMAL,
       allowNull: false,
       validate: {
         len: [1]
