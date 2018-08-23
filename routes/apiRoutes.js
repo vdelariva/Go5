@@ -37,10 +37,9 @@ module.exports = function(app) {
 
   //Get all articles for a specific date
   app.get("/api/articles/:start/:end", function(req, res) {
-    console.log(`api start: ${req.params.start}`);
     db.Article.findAll({
       where: {
-        publish_date: {[Op.between]:[req.params.start,req.params.end]}
+        publishDate: {[Op.between]:[req.params.start,req.params.end]}
       }
     }).then(function(dbArticle) {
       res.json(dbArticle);
