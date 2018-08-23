@@ -89,6 +89,27 @@ module.exports = function(app) {
     });
   });
 
+  //Update an Article
+  
+  app.put("/api/article/:id", function(req, res) {
+  console.log(req.body.articleText);
+  console.log(req.params.id);
+    db.Article.update({
+      articleText: req.body.articleText
+    }, {
+      where:{
+        id:req.params.id
+      }
+    }, function(dbArticle) {
+      if (dbArticle.changedRows === 0) {
+        // If no rows were changed, then the ID must not exist, so 404
+        return res.status(404).end();
+      } else {
+        res.json(dbArticle);
+      }
+    });
+  });
+
   //Route to get articles for a source from external API call
   var NewsAPI = require("newsapi");
   var newsapi = new NewsAPI(process.env.API_KEY);
