@@ -182,9 +182,9 @@ $(document).ready(function () {
     });
   }
   //-----------------------------------------------------------------------------
-  function addArticleText () {
+  // function addArticleText () {
     // Update article entry in db with article text
-  }
+  // }
   //-----------------------------------------------------------------------------
   // $("#propagandize").on("click", function(event) {
   //   event.preventDefault();
