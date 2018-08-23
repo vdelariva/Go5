@@ -42,38 +42,23 @@ module.exports = function(sequelize, DataTypes) {
     },
     currency: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     },
     relevance: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     },
     authority: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     },
     accuracy: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     },
     purpose: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     },
     comments: {
       type: DataTypes.STRING,
@@ -81,10 +66,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     finalRating: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: true
     }
 
   });
