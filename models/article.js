@@ -28,6 +28,63 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         len: [1]
       }
+    },
+    source: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    articleURL: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    currency: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    relevance: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    authority: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    accuracy: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    purpose: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    comments: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    finalRating: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
     }
 
   });
