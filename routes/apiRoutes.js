@@ -105,8 +105,8 @@ module.exports = function(app) {
 
   //Update an Article, add article text
   app.put("/api/article/:id", function(req, res) {
-    console.log(req.body.articleText);
-    console.log(req.params.id);
+    console.log(`api articleText: ${req.body.articleText}`);
+    console.log(`api id: ${req.params.id}`);
     db.Article.update({
       articleText: req.body.articleText
     }, {
@@ -126,11 +126,11 @@ module.exports = function(app) {
   //Insert new Articles
   app.post("/api/articles", function(req, res) {
   // console.log(`articles body: ${req.body}`);
-    console.log("test body");
-    console.log(req.body);
+    // console.log("test body");
+    // console.log(req.body);
     var newBody = req.body.temp;
-    console.log("newbody");
-    console.log(newBody);
+    // console.log("newbody");
+    // console.log(newBody);
 
     db.Article.bulkCreate(JSON.parse(newBody)).then(function(dbArticle) {
       res.json(dbArticle);
