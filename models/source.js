@@ -6,7 +6,9 @@ module.exports = function(sequelize, DataTypes) {
   //   models.Source.hasMany(models.Review);
   // };
   Source.associate = function(models) {
-    models.Source.hasMany(models.Article);
+    models.Source.hasMany(models.Article, {
+      onDelete: "CASCADE",
+    });
   };
   return Source;
 };

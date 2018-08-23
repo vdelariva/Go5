@@ -2,28 +2,29 @@ module.exports = function(sequelize, DataTypes) {
   var Article = sequelize.define("Article", {
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         len: [1]
       }
     },
     author: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         len: [1]
       }
     },
-    publish_date: {
+    publishDate: {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
         len: [1]
       }
     },
-    articleText: {
-      type: DataTypes.STRING,
-      allowNull: false,
+
+    articleText:{
+      type: DataTypes.TEXT,
+      allowNull: true,
       validate: {
         len: [1]
       }

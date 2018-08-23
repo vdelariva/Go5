@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
   ////////////
   //API CODE//
   ////////////
@@ -152,6 +152,7 @@ $(document).ready(function() {
   //   });
   // });
   // }); Braces are for a SubmitTest function that's no longer running
+
 });
 
 ////////////////////////////
