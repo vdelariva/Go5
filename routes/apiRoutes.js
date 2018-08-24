@@ -105,7 +105,9 @@ module.exports = function(app) {
 
   //Update an Article, add article text
   app.put("/api/article/:id", function(req, res) {
-    console.log(`api articleText: ${req.body.articleText}`);
+    // console.log(`api articleText: ${req.body}`);
+    console.log(`**** req.body ****`);
+    console.log(req.body);
     console.log(`api id: ${req.params.id}`);
     db.Article.update({
       articleText: req.body.articleText

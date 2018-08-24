@@ -183,18 +183,17 @@ $(document).ready(function () {
       "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
       article.articleURL;
       console.log(`URL: ${queryURL}`);
-      $.ajax({
+      $.when($.ajax({
         url: queryURL,
         method: "GET"
-      }).then(function(response) {
+      })).then(function(response) {
         console.log(`diffbot response: ${response.objects[0].text}`);//Would just need to append onto a div in the modal
         console.log(`******* data: ${JSON.stringify(data)}`);
         console.log(`dataId: ${article.id}`);
         // setTimeout(addArticleText(response.objects[0].text, stuff.id),10000);
-        return response.objects[0].text;
+        addArticleText(response.objects[0].text,article.id);
       });
     });
-    addArticleText();
     // displayArticles(data);
   }
   //-----------------------------------------------------------------------------
@@ -202,10 +201,11 @@ $(document).ready(function () {
     // Update article entry in db with article text
     // console.log(`addArticle id: ${id}`);
     console.log(`addArticle articleText: ${articleText}`);
+    console.log(`articleText: ${typeof articleText}`);
     $.ajax({
       method: "PUT",
       url: `/api/article/${id}`,
-      data: articleText
+      data: {articleText:articleText}
     }).then(function (data) {
       console.log(`ArticleText save: ${JSON.stringify(data)}`);
     });
