@@ -1,14 +1,16 @@
-var db = require("../models");
+// var db = require("../models");
 
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    db.Article.findAll({}).then(function(dbArticle) {
-      res.render("index", {
-        // msg: "Welcome!",
-        articles: dbArticle
-      });
-    });
+    // move code from index.js from document load action to here as a function
+    res.render("index",{});
+    // db.Article.findAll({}).then(function(dbArticle) {
+      // res.render("index", {
+      //   // msg: "Welcome!",
+      //   articles: dbArticle
+      // });
+    // });
   });
 
   // Load example page and pass in an example by id

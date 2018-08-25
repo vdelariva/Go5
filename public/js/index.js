@@ -46,12 +46,12 @@ $(document).ready(function () {
             console.log(`*** then data: ${JSON.stringify(data)}`);
             // Get article text
             getArticleText(data);
-            displayArticles(data);
+            displayArticles(data,moment().format("MMM Do YYYY"));
           });
         });
       } else {
         // Display articles from db
-        displayArticles(data);
+        displayArticles(data, moment().format("MMM Do YYYY"));
       }
     });
   });
@@ -59,9 +59,6 @@ $(document).ready(function () {
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function(event){
     event.preventDefault();
-
-    // var newArticle = getArticleText($(this).attr("data-url"));
-    // console.log(`newArticle: ${newArticle}`);
 
     // Pop up modal to show article & survey
     $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
@@ -100,7 +97,32 @@ $(document).ready(function () {
   // $("#saveChanges").attr("data-key",$(this).data("id"));
   });
   //-----------------------------------------------------------------------------
+  $("#submitDate").on("click", function(event){
+    event.preventDefault();
 
+    // Search for articles from db
+    var searchDate = $("#searchDate").val();
+    console.log(`searchDate: ${searchDate}`);
+
+    var start = moment.utc(searchDate).startOf('day').format(); 
+    var end = moment.utc(searchDate).endOf('day').format();
+
+    $.ajax({
+      method: "GET",
+      url: `/api/articles/${start}/${end}`
+    }).then(function(data) {
+      console.log(`another day articles: ${JSON.stringify(data)}`);
+      // If today's articles have not be posted, request from newsapi
+      if (data.length === 0){
+        // no articles for the search date
+        console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
+      }
+      else {
+        displayArticles(data, moment(searchDate).format("MMM Do YYYY"));
+      }
+    });
+  });
+  //-----------------------------------------------------------------------------
   $("#submitTest").on("click", function(event){
     event.preventDefault();
     function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
@@ -157,7 +179,7 @@ $(document).ready(function () {
   }
 
   //-----------------------------------------------------------------------------
-  function displayArticles (data) {
+  function displayArticles (data, displayDate) {
     console.log(`displayArticles data: ${JSON.stringify(data)})`);
     var $articles = data.map(function(article) {
       // var $li = $("<li>").html(`${article.title}`)
@@ -171,6 +193,7 @@ $(document).ready(function () {
         });
       return $li;
     });
+    $("#headlines").html(`Headlines for: ${displayDate}<i class="fa fa-angle-down rotate-icon"></i>`);
     $("#currentArticles").empty();
     $("#currentArticles").append($articles);
   }
@@ -183,29 +206,28 @@ $(document).ready(function () {
       "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
       article.articleURL;
       console.log(`URL: ${queryURL}`);
-      $.when($.ajax({
+      $.ajax({
         url: queryURL,
         method: "GET"
-      })).then(function(response) {
+      }).then(function(response) {
         console.log(`diffbot response: ${response.objects[0].text}`);//Would just need to append onto a div in the modal
         console.log(`******* data: ${JSON.stringify(data)}`);
         console.log(`dataId: ${article.id}`);
         // setTimeout(addArticleText(response.objects[0].text, stuff.id),10000);
-        addArticleText(response.objects[0].text,article.id);
+        return response.objects[0].text;
       });
     });
-    // displayArticles(data);
+    addArticleText();
   }
   //-----------------------------------------------------------------------------
   function addArticleText (articleText,id) {
     // Update article entry in db with article text
     // console.log(`addArticle id: ${id}`);
     console.log(`addArticle articleText: ${articleText}`);
-    console.log(`articleText: ${typeof articleText}`);
     $.ajax({
       method: "PUT",
       url: `/api/article/${id}`,
-      data: {articleText:articleText}
+      data: articleText
     }).then(function (data) {
       console.log(`ArticleText save: ${JSON.stringify(data)}`);
     });
