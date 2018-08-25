@@ -143,7 +143,7 @@ $(document).ready(function () {
       }
       else {
         displayArticles(data, moment(searchDate).format("MMM Do YYYY"));
-        $("#collapseTwo2").toggleClass("collapse hide");
+        $("#collapseTwo2").removeClass("show");
         $("#collapseOne1").toggleClass("collapse show");
       }
     });
@@ -232,7 +232,7 @@ $(document).ready(function () {
         });
       return $li;
     });
-    $("#headlines").html(`Headlines for: ${displayDate}<i class="fa fa-angle-down rotate-icon"></i>`);
+    $("#headlines").html(`<i class="fa fa-angle-down rotate-icon"></i> Headlines for: ${displayDate}`);
     $("#currentArticles").empty();
     $("#currentArticles").append($articles);
   }
