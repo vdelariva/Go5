@@ -26,9 +26,10 @@ h2 {
   font-style: normal;
   text-align: center;
   font-size: 5rem;
+  margin-bottom: 15px;
 }
 body {
-  background-color: rgb(243, 241, 241);
+  background-image: url("../images/background.png");
 }
 .issuance {
   font-family: 'Sriracha', cursive;
@@ -38,40 +39,79 @@ body {
   margin-bottom: -25px;
 }
 .alignLeft {
-	margin-right: auto;;
+  margin-right: auto;
+  margin-top: 0px;
 }
 .alignRight {
-	margin-left: auto;
+  margin-left: auto;
+  margin-top: 0px;
+}
+p, .alignLeft {
+  margin-bottom: 12px;
+}
+p, .alignRight {
+  margin-bottom: 12px;
 }
 h3 {
-  font-size: 20px;
+  font-size: 19px;
   font-family: 'Sriracha', cursive;
 }
 .headliner {
-  font-size: 15px;
+  font-size: 13px;
   font-family: 'Sriracha', cursive;
 }
 .headlinerAuthor {
-  font-size: 12px;
+  font-size: 10px;
   font-family: 'Sriracha', cursive;
 }
 .imageBorder {
   border: 3px groove rgb(243, 241, 241);
 }
-.mb-0 {
-  font-size: 20px;
-  font-family: 'Sriracha', cursive;
-  color: rgb(112, 112, 112);
-}
 .card-body, .card-header, .modal-content {
-  background-color: rgb(243, 241, 241);
+  background-image: url("../images/background.png");
 }
 footer {
   font-size: 12px;
   font-family: 'Sriracha', cursive;
   text-align: center;
 }
-.table td {
-  padding: 1px;
+.table td, .table th {
   vertical-align: middle;
+}
+.hrStyling {
+  border:none;
+  height: 20px;
+	height: 50px;
+	margin-top: 0;
+	border-bottom: 1px solid rgb(243, 241, 241);
+	box-shadow: 0 20px 20px -20px #333;
+  margin: -50px auto 10px; 
+  margin-right: -20px;
+  margin-left: -20px;
+}
+.firstHR {
+  border:none;
+  height: 20px;
+	height: 50px;
+	margin-top: 0;
+	box-shadow: 0 -20px 20px -20px #333;
+  margin: -50px auto 10px; 
+  margin-right: -20px;
+  margin-left: -20px;
+}
+.shadow-left {
+  box-shadow: -3px 0 10px -1px #333;
+}
+.mb-0 {
+  font-family: 'Sriracha', cursive;
+  color: #333;
+  font-size: 24px;
+}
+.article {
+  font-size: 17px;
+  font-family: 'Sriracha', cursive;
+}
+.modal-body, .modal-title {
+  font-size: 16px;
+  font-family: 'Sriracha', cursive;
 }
