@@ -1,10 +1,6 @@
 .list-group-item {
   line-height: 2.5;
 }
-#iframe {
-  height: 100%;
-  width: 100%;
-}
 @media (min-width: 768px) {
   .modal-xl {
     width: 90%;
@@ -69,4 +65,13 @@ h3 {
 }
 .card-body, .card-header, .modal-content {
   background-color: rgb(243, 241, 241);
+}
+footer {
+  font-size: 12px;
+  font-family: 'Sriracha', cursive;
+  text-align: center;
+}
+.table td {
+  padding: 1px;
+  vertical-align: middle;
 }
