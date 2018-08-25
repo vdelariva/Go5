@@ -24,6 +24,14 @@ module.exports = function(app) {
     });
   });
 
+  app.get("/api/articles/:articleId", function(req, res) {
+    db.Article.findAll({where: {
+      id: req.params.articleId
+    }}).then(function(dbArticle) {
+      res.json(dbArticle);
+    });
+  });
+
   //Get all articles for a source
   app.get("/api/articles/source/:sourceId", function(req, res) {
     db.Article.findAll({
