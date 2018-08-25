@@ -55,21 +55,25 @@ $(document).ready(function () {
       }
     });
   });
-  
+  function validateForm() {
+    var isValid = true;
+    $('.percentage').each(function () {
+      if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
+        isValid = false;
+      } 
+    });
+    return isValid;
+  }
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function(event){
     event.preventDefault();
     var articleID = $(this).attr("data-id");
-    console.log(articleID);
     $.ajax({
       method: "GET",
       url: `/api/articles/${articleID}`
     }).then(function(data){
-      console.log(data);
-      console.log(data.articleText);
       var articleText = data[0].articleText;
       var articleTitle = data[0].title;
-      console.log(articleText);
       $("#articleText").html(`<b>Title: </b>${articleTitle}<br><br>` 
       + `<b>Article: </b>${articleText}`
       + `<br><hr>`);
@@ -109,7 +113,11 @@ $(document).ready(function () {
           + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
           + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
         + `</div>`
-        + `</form>`);
+        + `</form>`
+        + `<div class="alert alert-danger collapse mt-2"role="alert">
+           <a href="#" class="close">&times;</a>
+           <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
+      </div>`);
   // $("#saveChanges").attr("data-key",$(this).data("id"));
   });
   //-----------------------------------------------------------------------------
@@ -131,52 +139,67 @@ $(document).ready(function () {
       // If today's articles have not be posted, request from newsapi
       if (data.length === 0){
         // no articles for the search date
-        console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
+        //console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
       }
       else {
         displayArticles(data, moment(searchDate).format("MMM Do YYYY"));
+        $("#collapseTwo2").toggleClass("collapse hide");
+        $("#collapseOne1").toggleClass("collapse show");
       }
     });
   });
   //-----------------------------------------------------------------------------
   $("#submitTest").on("click", function(event){
     event.preventDefault();
-    function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
-      var rating = (currency + relevance + authority + accuracy + purpose) / 5;
-      return rating;
-    }
-    console.log($("#currency").val());
-    var currency = parseInt($("#currency").val());
-    var relevance = parseInt($("#relevance").val());
-    var authority = parseInt($("#authority").val());
-    var accuracy = parseInt($("#accuracy").val());
-    var purpose = parseInt($("#purpose").val());
-    var comments = $("#comments").val().trim();
+    
+    var validForm = validateForm();
 
-    var review = {
-      currency: currency,
-      relevance: relevance,
-      authority: authority,
-      accuracy: accuracy,
-      purpose: purpose,
-      ArticleId: 1009, //Needs to capture value
-      SourceId: 2, //Needs to capture value
-      comments: comments, //Needs to capture value
-      finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
-    };
-    console.log(JSON.stringify(review));
-    $.ajax({
-      method: "POST",
-      url: "/api/review",
-      data: review
-    }).then(function (data) {
-      console.log(`ReviewSaved: ${JSON.stringify(data)}`);
-    });
+    if (validForm === true){
+      
+      function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
+        var rating = (currency + relevance + authority + accuracy + purpose) / 5;
+        return rating;
+      }
+      console.log($("#currency").val());
+      var currency = parseInt($("#currency").val());
+      var relevance = parseInt($("#relevance").val());
+      var authority = parseInt($("#authority").val());
+      var accuracy = parseInt($("#accuracy").val());
+      var purpose = parseInt($("#purpose").val());
+      var comments = $("#comments").val().trim();
 
-    // values captured. Now I need to take these values and assign them to the article
-    articleRating(review.finalRating);
+      var review = {
+        currency: currency,
+        relevance: relevance,
+        authority: authority,
+        accuracy: accuracy,
+        purpose: purpose,
+        ArticleId: 1009, //Needs to capture value
+        SourceId: 2, //Needs to capture value
+        comments: comments, //Needs to capture value
+        finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
+      };
+      console.log(JSON.stringify(review));
+      $.ajax({
+        method: "POST",
+        url: "/api/review",
+        data: review
+      }).then(function (data) {
+        console.log(`ReviewSaved: ${JSON.stringify(data)}`);
+      });
+
+      // values captured. Now I need to take these values and assign them to the article
+      articleRating(review.finalRating);
+    } else {
+      $('.alert').show();
+      return false;
+    } 
   });
-
+  // Close alert - Unable to find in modal, needs to search the entire document 
+  $(document).on("click", ".close", function(event){
+    event.preventDefault();
+    $('.alert').hide();
+  });
   //-----------------------------------------------------------------------------
   function articleRating(finalRating) {
     if (finalRating >= 8){

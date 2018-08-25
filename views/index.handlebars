@@ -20,77 +20,97 @@
         <p></p>
         <p class="headlinerAuthor">Written by: The Cred-Checker Daily</p>
       </div>
-      <div class="col-md-6" style="display:table-cell; vertical-align:middle; text-align:center">
-        <img class="imageBorder" src="../../images/credibleMedium.jpg">
-      </div>
+      <div class="col-md-6" style="display:table-cell;">
+      <caption><h3 style="text-align: center">The Cred-Checker Article Rating System</h3></caption>
+      <table class="table">
+          <tbody>
+              <tr>
+                <th class="headliner">Rating of 1-4:</th>
+                  <td><img class="imageBorder" src="../../images/fakenewsSmall.jpg" width="125px" height="40px"></td>
+              </tr>
+              <tr>
+                <th class="headliner">Rating of 4-6:</th>
+                  <td><img class="imageBorder" src="../../images/misleadingSmall.jpg" width="125px" height="40px"></td>
+              </tr>
+              <tr>
+                <th class="headliner">Rating of 6-8:</th>
+                  <td><img class="imageBorder" src="../../images/approvedSmall.jpg" width="125px" height="40px"></td>
+              </tr>
+            <tr>
+                <th class="headliner col-xs-1">Rating of 8-10:</th>
+                  <td><img class="imageBorder" src="../../images/credibleSmall.jpg" width="125px" height="40px"></td>
+              </tr>
+          </tbody>
+      </table>
       
+      </div>
+      {{!-- </ul> --}}
     </div>
     <hr>
-    <div class="card card-image" style="background-image: url('../../images/Newspapers.jpg');">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-12 col-xl-12">
+          <!--Accordion wrapper-->
+          <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
-      <div class="rgba-black-strong py-5 px-3">
-        <div class="row d-flex justify-content-center">
-          <div class="col-md-12 col-xl-12">
-            <!--Accordion wrapper-->
-            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+            <!-- Accordion card -->
+            <div class="card">
 
-              <!-- Accordion card -->
-              <div class="card">
-
-                <!-- Card header -->
-                <div class="card-header" role="tab" id="headingOne1">
-                  <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
-                    <h5 id="headlines" class="mb-0"></h5>
-                  </a>
-                </div>
-
-                <!-- Card body -->
-                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
-                  <div class="card-body">
-                    <div id="currentArticles"></div>
-                  </div>
-                </div>
-
+              <!-- Card header -->
+              <div class="card-header" role="tab" id="headingOne1">
+                <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
+                  <h5 id="headlines" class="mb-0"></h5>
+                </a>
               </div>
-              <!-- Accordion card -->
 
-              <!-- Accordion card -->
-              <div class="card">
-
-                <!-- Card header -->
-                <div class="card-header" role="tab" id="headingTwo2">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
-                    <h5 class="mb-0">
-                      Search <i class="fa fa-angle-down rotate-icon"></i>
-                    </h5>
-                  </a>
+              <!-- Card body -->
+              <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                <div class="card-body">
+                  <div id="currentArticles"></div>
                 </div>
+              </div>
 
-                <!-- Card body -->
-                <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
-                  <div class="card-body">
-                    <form>
-                      <div class="form-group row">
-                        <label for="searchDate" class="col-2 col-form-label">Search Date</label>
-                        <div class="col-5">
-                          <input type="date" class="form-control" id="searchDate" placeholder="">
-                        </div>
-                        <div class="col-2">
-                          <button id="submitDate" class="btn btn-primary" type="submit">Submit</button>
-                        </div>
+            </div>
+            <!-- Accordion card -->
+
+            <!-- Accordion card -->
+            <div class="card">
+
+              <!-- Card header -->
+              <div class="card-header" role="tab" id="headingTwo2">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                  <h5 class="mb-0">
+                    Search <i class="fa fa-angle-down rotate-icon"></i>
+                  </h5>
+                </a>
+              </div>
+
+              <!-- Card body -->
+              <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                <div class="card-body">
+                  <form>
+                    <div class="form-group row">
+                      <label for="searchDate" class="col-2 col-form-label">Search Date</label>
+                      <div class="col-5">
+                        <input type="date" class="form-control" id="searchDate" placeholder="">
                       </div>
-                    </form>
-                  </div>
+                      <div class="col-2">
+                        <button id="submitDate" class="btn btn-primary" type="submit">Submit</button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     <!-- Accordion wrapper -->
     <div id="rating"></div>
-
+    <hr>
+    <footer>
+      Copyright &copy; The Cred-Checker Daily
+    </footer>
+    <br>
     {{!-- Modal --}}
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog modal-xl">
