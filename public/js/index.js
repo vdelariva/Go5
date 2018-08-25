@@ -63,12 +63,12 @@ $(document).ready(function () {
     console.log(articleID);
     $.ajax({
       method: "GET",
-      url: `/api/articles`
+      url: `/api/articles/${articleID}`
     }).then(function(data){
-      console.log(data[0]);
-      console.log(data[0].articleText);
-      var articleText = data[articleID-1].articleText;
-      var articleTitle = data[articleID-1].title;
+      console.log(data);
+      console.log(data.articleText);
+      var articleText = data[0].articleText;
+      var articleTitle = data[0].title;
       console.log(articleText);
       $("#articleText").html(`<b>Title: </b>${articleTitle}<br><br>` 
       + `<b>Article: </b>${articleText}`
