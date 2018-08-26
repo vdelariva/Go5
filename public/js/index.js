@@ -66,6 +66,8 @@ $(document).ready(function () {
       }
     });
   });
+
+  //-----------------------------------------------------------------------------
   function validateForm() {
     var isValid = true;
     $('.percentage').each(function () {
@@ -78,8 +80,13 @@ $(document).ready(function () {
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function (event) {
     event.preventDefault();
+<<<<<<< HEAD
     articleID = $(this).attr("data-id");
     console.log(articleID);
+=======
+    var articleID = $(this).attr("data-id");
+
+>>>>>>> modal updates
     $.ajax({
       method: "GET",
       url: `/api/articles/${articleID}`
@@ -87,7 +94,10 @@ $(document).ready(function () {
       console.log(data);
       console.log(data.articleText);
       var articleText = data[0].articleText;
+      var articleSource = data[0].source;
+      var articleDate = data[0].publishDate;
       var articleTitle = data[0].title;
+<<<<<<< HEAD
       console.log(articleText);
       $("#articleText").html(`<b>Title: </b>${articleTitle}<br><br>`
         + `<b>Article: </b>${articleText}`
@@ -97,46 +107,67 @@ $(document).ready(function () {
     // Pop up modal to show article & survey
     $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
     $(".modal-body").html(`<form id='surveyForm'>`
+=======
+
+      $(".modal-title").html(`${articleTitle}`);
+      if (articleText === null){
+        // $(".modal-body").empty();
+        $(".modal-body").html("<b style='color:red;'>Article still loading... Please check back later</b>");
+        $(".modal-footer").hide();
+      }
+      else {
+        $(".modal-body").html(`<form id='surveyForm'>`
+>>>>>>> modal updates
         + `<div id="articleText"></div>`
-        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
+        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)<br><br></div>`
+        + `<div class="form-row form-group mb-1">`
+          + `<label for='currency' class='col-4 mb-0'><b>Currency:</b> Timeliness of the information.`
           + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
-        + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
+        + `<div class='col-1'></div>`
+          + `<label for='relevance' class='col-5 mb-0'><b>Relevance:</b> Importance of the information.`
           + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
+        + `<div class='form-row form-group mb-1'>`
+          + `<label for='authority' class='col-4 mb-0'><b>Authority:</b> Source of the information.`
           + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
-        + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
+        + `<div class='col-1'></div>`
+          + `<label for='accuracy' class='col-5 mb-0'><b>Accuracy:</b> Reliability & truthfulness of the information.`
           + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
+        + `<div class='form-row form-group mb-1'>`
+          + `<label for='purpose' class='col-4 mb-0'><b>Purpose:</b> Reason the information exists.`
           + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
+        + `<div class='form-group row mb-1'>`
           + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
           + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
         + `</div>`
         + `</form>`
         + `<div class="alert alert-danger collapse mt-2"role="alert">
-           <a href="#" class="close">&times;</a>
-           <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
-      </div>`);
-  // $("#saveChanges").attr("data-key",$(this).data("id"));
+            <a href="#" class="close">&times;</a>
+            <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
+          </div>`);
+        $(".modal-footer").show();
+        $("#articleText").html(`<b>Source: </b>${articleSource} <span style="float:right"><b>Published Date: </b>${moment(articleDate).format("MMM Do YYYY")}</span><br><br>` 
+        + `<b>Article: </b>${articleText}`
+        + `<br><hr>`);
+      // return;
+      }
+    });
   });
   //-----------------------------------------------------------------------------
+<<<<<<< HEAD
   $("#submitDate").on("click", function (event) {
+=======
+  // Pop up modal to show article & survey
+  //-----------------------------------------------------------------------------
+  $("#submitDate").on("click", function(event){
+>>>>>>> modal updates
     event.preventDefault();
 
     // Search for articles from db
@@ -230,7 +261,6 @@ $(document).ready(function () {
       return;
     }
   }
-
   //-----------------------------------------------------------------------------
   function displayArticles(data, displayDate) {
     console.log(`displayArticles data: ${JSON.stringify(data)})`);
@@ -251,7 +281,6 @@ $(document).ready(function () {
     $("#currentArticles").empty();
     $("#currentArticles").append($articles);
   }
-
   //-----------------------------------------------------------------------------
   // Get article text using diffbot api
   function getArticleText(data) {
