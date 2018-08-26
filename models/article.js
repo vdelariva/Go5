@@ -21,57 +21,20 @@ module.exports = function(sequelize, DataTypes) {
         len: [1]
       }
     },
-
+    articleURL: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     articleText:{
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
         len: [1]
       }
-    },
-    source: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
-    },
-    articleURL: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    currency: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    relevance: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    authority: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    accuracy: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    purpose: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    comments: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    finalRating: {
-      type: DataTypes.DECIMAL,
-      allowNull: true
     }
-
   });
   Article.associate = function(models) {
-    models.Article.belongsTo(models.Source, {
+    Article.belongsTo(models.Source, {
       onDelete: "CASCADE",
       foreignKey: {
         allowNull: false
@@ -79,8 +42,8 @@ module.exports = function(sequelize, DataTypes) {
     });
   };
 
-  Article.associate = function(models) {
-    models.Article.hasMany(models.Review);
-  };
+  // Article.associate = function(models) {
+  //   models.Article.hasMany(models.Review);
+  // };
   return Article;
 };

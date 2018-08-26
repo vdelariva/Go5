@@ -56,35 +56,13 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
-    models.Review.belongsTo(models.Source, {
-      //as: "Source",
-      onDelete: "cascade",
-      foreignKey: {
-        allowNull: false
-      }
-    });
+    // models.Review.belongsTo(models.Source, {
+    //   //as: "Source",
+    //   onDelete: "cascade",
+    //   foreignKey: {
+    //     allowNull: false
+    //   }
+    // });
   };
-  // Review.associate = function(models) {
-  //   models.Review.belongsTo(models.Source, {
-  //     onDelete: "CASCADE",
-  //     foreignKey: {
-  //       allowNull: false
-  //     }
-  //   });
-  //   models.Review.belongsTo(models.Article, {
-  //     onDelete: "CASCADE",
-  //     foreignKey: {
-  //       allowNull: false
-  //     }
-  //   });
-  // };
-  // Review.associate = function(models) {
-  //   models.Review.belongsTo(models.Source, {
-  //     onDelete: "CASCADE",
-  //     foreignKey: {
-  //       allowNull: false
-  //     }
-  //   });
-  // };
   return Review;
 };
