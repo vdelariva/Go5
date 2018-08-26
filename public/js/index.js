@@ -18,9 +18,6 @@ $(document).ready(function () {
       var sourcesArray = data;
       console.log("Source Data: "+sourcesArray);
       sourcesArray.forEach(obj=>sourceMap.set(obj.id, obj.name));
-      
-
-      console.log(sourceMap.get("fox-news"));
     });
 
     $.ajax({
@@ -69,7 +66,15 @@ $(document).ready(function () {
       }
     });
   });
-
+  function validateForm() {
+    var isValid = true;
+    $('.percentage').each(function () {
+      if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
+        isValid = false;
+      } 
+    });
+    return isValid;
+  }
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function (event) {
     event.preventDefault();
@@ -92,39 +97,43 @@ $(document).ready(function () {
     // Pop up modal to show article & survey
     $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
     $(".modal-body").html(`<form id='surveyForm'>`
-      + `<div id="articleText"></div>`
-      + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
-      + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
-      + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
-      + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
-      + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
-      + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
-      + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
-      + `</div>`
-      + `<div class='form-group row mb=0'>`
-      + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
-      + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
-      + `</div>`
-      + `</form>`);
-    // $("#saveChanges").attr("data-key",$(this).data("id"));
+        + `<div id="articleText"></div>`
+        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
+          + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
+          + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
+          + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
+          + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
+          + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
+          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
+        + `</div>`
+        + `<div class='form-group row mb=0'>`
+          + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
+          + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
+        + `</div>`
+        + `</form>`
+        + `<div class="alert alert-danger collapse mt-2"role="alert">
+           <a href="#" class="close">&times;</a>
+           <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
+      </div>`);
+  // $("#saveChanges").attr("data-key",$(this).data("id"));
   });
   //-----------------------------------------------------------------------------
   $("#submitDate").on("click", function (event) {
@@ -145,51 +154,66 @@ $(document).ready(function () {
       // If today's articles have not be posted, request from newsapi
       if (data.length === 0) {
         // no articles for the search date
-        console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
+        //console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
       }
       else {
         displayArticles(data, moment(searchDate).format("MMM Do YYYY"));
+        $("#collapseTwo2").removeClass("show");
+        $("#collapseOne1").toggleClass("collapse show");
       }
     });
   });
   //-----------------------------------------------------------------------------
   $("#submitTest").on("click", function (event) {
     event.preventDefault();
-    function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
-      var rating = (currency + relevance + authority + accuracy + purpose) / 5;
-      return rating;
-    }
-    console.log($("#currency").val());
-    var currency = parseInt($("#currency").val());
-    var relevance = parseInt($("#relevance").val());
-    var authority = parseInt($("#authority").val());
-    var accuracy = parseInt($("#accuracy").val());
-    var purpose = parseInt($("#purpose").val());
-    var comments = $("#comments").val().trim();
+    
+    var validForm = validateForm();
 
-    var review = {
-      currency: currency,
-      relevance: relevance,
-      authority: authority,
-      accuracy: accuracy,
-      purpose: purpose,
-      ArticleId: articleID, //Needs to capture value
-      comments: comments, //Needs to capture value
-      finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
-    };
-    console.log(JSON.stringify(review));
-    $.ajax({
-      method: "POST",
-      url: "/api/review",
-      data: review
-    }).then(function (data) {
-      console.log(`ReviewSaved: ${JSON.stringify(data)}`);
-    });
+    if (validForm === true){
+      
+      function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
+        var rating = (currency + relevance + authority + accuracy + purpose) / 5;
+        return rating;
+      }
+      console.log($("#currency").val());
+      var currency = parseInt($("#currency").val());
+      var relevance = parseInt($("#relevance").val());
+      var authority = parseInt($("#authority").val());
+      var accuracy = parseInt($("#accuracy").val());
+      var purpose = parseInt($("#purpose").val());
+      var comments = $("#comments").val().trim();
 
-    // values captured. Now I need to take these values and assign them to the article
-    articleRating(review.finalRating);
+      var review = {
+        currency: currency,
+        relevance: relevance,
+        authority: authority,
+        accuracy: accuracy,
+        purpose: purpose,
+        ArticleId: articleID, //Needs to capture value
+        comments: comments, //Needs to capture value
+        finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
+      };
+      console.log(JSON.stringify(review));
+      $.ajax({
+        method: "POST",
+        url: "/api/review",
+        data: review
+      }).then(function (data) {
+        console.log(`ReviewSaved: ${JSON.stringify(data)}`);
+      });
+
+      // values captured. Now I need to take these values and assign them to the article
+      articleRating(review.finalRating);
+    } else {
+      $('.alert').show();
+      return false;
+    } 
   });
-
+  // Close alert - Unable to find in modal, needs to search the entire document 
+  $(document).on("click", ".close", function(event){
+    event.preventDefault();
+    $('.alert').hide();
+  });
   //-----------------------------------------------------------------------------
   function articleRating(finalRating) {
     if (finalRating >= 8) {
@@ -223,7 +247,7 @@ $(document).ready(function () {
         });
       return $li;
     });
-    $("#headlines").html(`Headlines for: ${displayDate}<i class="fa fa-angle-down rotate-icon"></i>`);
+    $("#headlines").html(`<i class="fa fa-angle-down rotate-icon"></i> Headlines for: ${displayDate}`);
     $("#currentArticles").empty();
     $("#currentArticles").append($articles);
   }
