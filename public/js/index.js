@@ -80,13 +80,8 @@ $(document).ready(function () {
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function (event) {
     event.preventDefault();
-<<<<<<< HEAD
     articleID = $(this).attr("data-id");
     console.log(articleID);
-=======
-    var articleID = $(this).attr("data-id");
-
->>>>>>> modal updates
     $.ajax({
       method: "GET",
       url: `/api/articles/${articleID}`
@@ -97,17 +92,6 @@ $(document).ready(function () {
       var articleSource = data[0].source;
       var articleDate = data[0].publishDate;
       var articleTitle = data[0].title;
-<<<<<<< HEAD
-      console.log(articleText);
-      $("#articleText").html(`<b>Title: </b>${articleTitle}<br><br>`
-        + `<b>Article: </b>${articleText}`
-        + `<br><hr>`);
-      return;
-    });
-    // Pop up modal to show article & survey
-    $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
-    $(".modal-body").html(`<form id='surveyForm'>`
-=======
 
       $(".modal-title").html(`${articleTitle}`);
       if (articleText === null){
@@ -117,7 +101,6 @@ $(document).ready(function () {
       }
       else {
         $(".modal-body").html(`<form id='surveyForm'>`
->>>>>>> modal updates
         + `<div id="articleText"></div>`
         + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)<br><br></div>`
         + `<div class="form-row form-group mb-1">`
@@ -161,13 +144,7 @@ $(document).ready(function () {
     });
   });
   //-----------------------------------------------------------------------------
-<<<<<<< HEAD
   $("#submitDate").on("click", function (event) {
-=======
-  // Pop up modal to show article & survey
-  //-----------------------------------------------------------------------------
-  $("#submitDate").on("click", function(event){
->>>>>>> modal updates
     event.preventDefault();
 
     // Search for articles from db
