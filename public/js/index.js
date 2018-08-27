@@ -7,10 +7,10 @@ $(document).ready(function () {
   $(window).on("load", function (event) {
     event.preventDefault();
 
-    // Get today's articles from db
-    var start = moment.utc().startOf('day').format();
-    var end = moment.utc().endOf('day').format();
+    var start = moment().startOf('day').format();
+    var end = moment().endOf('day').format();
 
+    // Get all sources
     $.ajax({
       method: "GET",
       url: `/api/sources`
@@ -20,11 +20,12 @@ $(document).ready(function () {
       sourcesArray.forEach(obj=>sourceMap.set(obj.id, obj.name));
     });
 
+    // Get today's articles from db
     $.ajax({
       method: "GET",
       url: `/api/articles/${start}/${end}`
     }).then(function (data) {
-      //console.log(`todays articles: ${JSON.stringify(data)}`);
+      console.log(`todays articles: ${JSON.stringify(data)}`);
       // If today's articles have not be posted, request from newsapi
       if (data.length === 0) {
         // Get today's headlines
@@ -52,7 +53,7 @@ $(document).ready(function () {
           $.ajax({
             method: "POST",
             url: "/api/articles",
-            data: { temp: JSON.stringify(bulkData) }
+            data: { articles: JSON.stringify(bulkData) }
           }).then(function (data) {
             console.log(`*** Article Inserted data: ${JSON.stringify(data)}`);
             // Get article text
@@ -66,15 +67,7 @@ $(document).ready(function () {
       }
     });
   });
-  function validateForm() {
-    var isValid = true;
-    $('.percentage').each(function () {
-      if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
-        isValid = false;
-      } 
-    });
-    return isValid;
-  }
+
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function (event) {
     event.preventDefault();
@@ -84,56 +77,65 @@ $(document).ready(function () {
       method: "GET",
       url: `/api/articles/${articleID}`
     }).then(function (data) {
-      console.log(data);
-      console.log(data.articleText);
+      console.log(`modal: ${JSON.stringify(data)}`);
       var articleText = data[0].articleText;
+      var articleSource = data[0].Source.name;
+      var articleDate = data[0].publishDate;
       var articleTitle = data[0].title;
-      console.log(articleText);
-      $("#articleText").html(`<b>Title: </b>${articleTitle}<br><br>`
-        + `<b>Article: </b>${articleText}`
-        + `<br><hr>`);
-      return;
-    });
-    // Pop up modal to show article & survey
-    $(".modal-title").html("<b>CRAAP Survey</b><br>Evaluating Web Resources");
-    $(".modal-body").html(`<form id='surveyForm'>`
+
+      $(".modal-title").html(`${articleTitle}`);
+      if (articleText === null){
+        // $(".modal-body").empty();
+        $(".modal-body").html("<b style='color:red;'>Article still loading... Please check back later</b>");
+        $(".modal-footer").hide();
+      }
+      else if (articleText === 'Show Clips') {
+        $(".modal-body").html("<b style='color:red;'>Video Only, article not available</b>");
+        $(".modal-footer").hide();
+      }
+      else {
+        $(".modal-body").html(`<form id='surveyForm'>`
         + `<div id="articleText"></div>`
-        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='currency' class='col-10 col-form-label'><b>Currency:</b> Timeliness of the information.`
+        + `<div>Answer the questions as appropriate, rank each part from 1 to 10 (1 = unreliable, 10 = excellent)<br><br></div>`
+        + `<div class="form-row form-group mb-1">`
+          + `<label for='currency' class='col-4 mb-0'><b>Currency:</b> Timeliness of the information.`
           + `<ul><li>When was it published?</li><li>Has it been revised or updated?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
-        + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='relevance' class='col-10 col-form-label'><b>Relevance:</b> Importance of the information.`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='currency' value=''></div>`
+        + `<div class='col-1'></div>`
+          + `<label for='relevance' class='col-5 mb-0'><b>Relevance:</b> Importance of the information.`
           + `<ul><li>Does it answer your question?</li><li>Would you be comfortable citing this source?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='relevance' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='authority' class='col-10 col-form-label'><b>Authority:</b> Source of the information.`
+        + `<div class='form-row form-group mb-1'>`
+          + `<label for='authority' class='col-4 mb-0'><b>Authority:</b> Source of the information.`
           + `<ul><li>Who is the author?</li><li>What are the author's credentials?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
-        + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='accuracy' class='col-10 col-form-label'><b>Accuracy:</b> Reliability & truthfulness of the information.`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='authority' value=''></div>`
+        + `<div class='col-1'></div>`
+          + `<label for='accuracy' class='col-5 mb-0'><b>Accuracy:</b> Reliability & truthfulness of the information.`
           + `<ul><li>Is it supported by evidence?</li><li>Can you verify information in another source?</li><li>Any errors?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='accuracy' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
-          + `<label for='purpose' class='col-10 col-form-label'><b>Purpose:</b> Reason the information exists.`
+        + `<div class='form-row form-group mb-1'>`
+          + `<label for='purpose' class='col-4 mb-0'><b>Purpose:</b> Reason the information exists.`
           + `<ul><li>Do the authors make their intentions clear?</li><li>Is the point of view objective & impartial?</li><li>Is it biased?</li></ul></label>`
-          + `<div class='col-2'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
+          + `<div class='col-1'><input type='number' min='1' max='10' class='form-control percentage' id='purpose' value=''></div>`
         + `</div>`
-        + `<div class='form-group row mb=0'>`
+        + `<div class='form-group row mb-1'>`
           + `<label for='comments' class='col-12 col-form-label'><b>Comments:</b><p></p>`
           + `<textarea class="form-control" id="comments" rows="5" placeholder="Share your thoughts on the legitimacy of the source here..."></textarea></div>`
         + `</div>`
         + `</form>`
         + `<div class="alert alert-danger collapse mt-2"role="alert">
-           <a href="#" class="close">&times;</a>
-           <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
-      </div>`);
-  // $("#saveChanges").attr("data-key",$(this).data("id"));
+            <a href="#" class="close">&times;</a>
+            <strong>Fake Ratings are just as bad as Fake News!</strong> You must enter a rating between 1 and 10!
+          </div>`);
+        $(".modal-footer").show();
+        $("#articleText").html(`<b>Source: </b>${articleSource} <span style="float:right"><b>Published Date: </b>${moment(articleDate).format("MMM Do YYYY")}</span><br><br>`
+        + `<b>Article: </b>${articleText}`
+        + `<br><hr>`);
+      // return;
+      }
+    });
   });
   //-----------------------------------------------------------------------------
   $("#submitDate").on("click", function (event) {
@@ -152,11 +154,7 @@ $(document).ready(function () {
     }).then(function (data) {
       console.log(`another day articles: ${JSON.stringify(data)}`);
       // If today's articles have not be posted, request from newsapi
-      if (data.length === 0) {
-        // no articles for the search date
-        //console.log(`No articles for: ${moment(searchDate).format("MMM Do YYYY")}`);
-      }
-      else {
+      if (data.length !== 0) {
         displayArticles(data, moment(searchDate).format("MMM Do YYYY"));
         $("#collapseTwo2").removeClass("show");
         $("#collapseOne1").toggleClass("collapse show");
@@ -171,10 +169,6 @@ $(document).ready(function () {
 
     if (validForm === true){
       
-      function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
-        var rating = (currency + relevance + authority + accuracy + purpose) / 5;
-        return rating;
-      }
       console.log($("#currency").val());
       var currency = parseInt($("#currency").val());
       var relevance = parseInt($("#relevance").val());
@@ -189,8 +183,8 @@ $(document).ready(function () {
         authority: authority,
         accuracy: accuracy,
         purpose: purpose,
-        ArticleId: articleID, //Needs to capture value
-        comments: comments, //Needs to capture value
+        ArticleId: articleID,
+        comments: comments,
         finalRating: calculateFinalRating(currency, relevance, authority, accuracy, purpose)
       };
       console.log(JSON.stringify(review));
@@ -203,41 +197,85 @@ $(document).ready(function () {
       });
 
       // values captured. Now I need to take these values and assign them to the article
-      articleRating(review.finalRating);
+      // Commented this out, we want to show the rating on the headline line with updated aggregate rating
+      // articleRating(review.finalRating);
     } else {
       $('.alert').show();
       return false;
     } 
   });
+  //-----------------------------------------------------------------------------
   // Close alert - Unable to find in modal, needs to search the entire document 
   $(document).on("click", ".close", function(event){
     event.preventDefault();
     $('.alert').hide();
   });
   //-----------------------------------------------------------------------------
-  function articleRating(finalRating) {
-    if (finalRating >= 8) {
-      $("#rating").html("<img src='../images/credibleSmall.jpg'>");
-      return;
-    } else if (finalRating < 8 && finalRating >= 6) {
-      $("#rating").html("<img src='../images/approvedSmall.jpg'>");
-      return;
-    } else if (finalRating < 6 && finalRating >= 4) {
-      $("#rating").html("<img src='../images/misleadingSmall.jpg'>");
-      return;
-    } else {
-      $("#rating").html("<img src='../images/fakenewsSmall.jpg'>");
-      return;
-    }
+  // Functions
+  //-----------------------------------------------------------------------------
+  function validateForm() {
+    var isValid = true;
+    $('.percentage').each(function () {
+      if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
+        isValid = false;
+      } 
+    });
+    return isValid;
   }
+  //-----------------------------------------------------------------------------
+  function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
+    var rating = (currency + relevance + authority + accuracy + purpose) / 5;
+    return rating;
+  }
+  //-----------------------------------------------------------------------------
+  // Get all reviews for a specific article
+  function getAllArticleReviews(articleId){
+    var rating = 0;
 
+    $.when($.ajax({
+      method: "GET",
+      url: `/api/reviews/article/${articleId}`
+    })).then(function (data) {
+      console.log(`Reviews: ${data}`);
+      if (data.length !== 0){
+        // display rating
+        for (var i=0; i < data.length; i++) {
+          rating += parseInt(data[i].finalRating);
+        }
+        rating = rating/data.length;
+        console.log(`cumRating: ${rating}`);
+        return rating;
+      }
+      return rating;
+    });
+  }
+  //-----------------------------------------------------------------------------
+  // function articleRating(finalRating) {
+  //   if (finalRating >= 8) {
+  //     $("#rating").html("<img src='../images/credibleSmall.jpg'>");
+  //     return;
+  //   } else if (finalRating < 8 && finalRating >= 6) {
+  //     $("#rating").html("<img src='../images/approvedSmall.jpg'>");
+  //     return;
+  //   } else if (finalRating < 6 && finalRating >= 4) {
+  //     $("#rating").html("<img src='../images/misleadingSmall.jpg'>");
+  //     return;
+  //   } else {
+  //     $("#rating").html("<img src='../images/fakenewsSmall.jpg'>");
+  //     return;
+  //   }
+  // }
   //-----------------------------------------------------------------------------
   function displayArticles(data, displayDate) {
     console.log(`displayArticles data: ${JSON.stringify(data)})`);
     console.log(sourceMap);
     var $articles = data.map(function (article) {
       // var $li = $("<li>").html(`${article.title}`)
-      var $li = $("<li>").html(`<b>${sourceMap.get(article.SourceId)}:</b> ${article.title}`)
+      var rating = getAllArticleReviews(article.id);
+      if (rating === 0){
+        rating = "None";
+      }
+      var $li = $("<li>").html(`<b>${sourceMap.get(article.SourceId)}:</b> ${article.title}<span style="float:right"><b>Rating: </b>${rating}</span>`)
         .attr({
           "data-toggle": "modal",
           "data-target": "#myModal",
@@ -251,7 +289,6 @@ $(document).ready(function () {
     $("#currentArticles").empty();
     $("#currentArticles").append($articles);
   }
-
   //-----------------------------------------------------------------------------
   // Get article text using diffbot api
   function getArticleText(data) {

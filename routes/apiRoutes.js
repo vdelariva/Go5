@@ -23,7 +23,6 @@ module.exports = function (app) {
       include: [
         {
           model: db.Source
-          
         }
       ]
     }).then(function (dbArticle) {
@@ -39,7 +38,6 @@ module.exports = function (app) {
       include: [
         {
           model: db.Source
-         
         }
       ]
     }).then(function (dbArticle) {
@@ -49,6 +47,7 @@ module.exports = function (app) {
 
   //Get all articles for a specific date
   app.get("/api/articles/:start/:end", function (req, res) {
+    console.log(`api date: ${req.params.start}`);
     db.Article.findAll({
       where: {
         publishDate: { [Op.between]: [req.params.start, req.params.end] }
@@ -56,27 +55,29 @@ module.exports = function (app) {
       include: [
         {
           model: db.Source
-          
         }
       ]
     }).then(function (dbArticle) {
+      console.log(`api by date articles: ${JSON.stringify(dbArticle)}`);
       res.json(dbArticle);
     });
   });
 
   // Get all reviews for an article
   app.get("/api/reviews/article/:articleId", function (req, res) {
+    // console.log(`api reviews id: ${req.params.articleId}`);
     db.Review.findAll({
       where: {
         ArticleId: req.params.articleId
-      },
-      include: [
-        {
-          model: db.Source,
-          as: "Source"
-        }
-      ]
+      }
+      // include: [
+      //   {
+      //     model: db.Source,
+      //     as: "Source"
+      //   }
+      // ]
     }).then(function (dbReview) {
+      console.log(`review json: ${JSON.stringify(dbReview)}`);
       res.json(dbReview);
     });
   });
@@ -105,17 +106,17 @@ module.exports = function (app) {
     db.Article.update({
       articleText: req.body.articleText
     }, {
-        where: {
-          id: req.params.id
-        }
-      }, function (dbArticle) {
-        if (dbArticle.changedRows === 0) {
-          // If no rows were changed, then the ID must not exist, so 404
-          return res.status(404).end();
-        } else {
-          res.json(dbArticle);
-        }
-      });
+      where: {
+        id: req.params.id
+      }
+    }, function (dbArticle) {
+      if (dbArticle.changedRows === 0) {
+        // If no rows were changed, then the ID must not exist, so 404
+        return res.status(404).end();
+      } else {
+        res.json(dbArticle);
+      }
+    });
   });
 
   //Insert new Articles
@@ -123,11 +124,12 @@ module.exports = function (app) {
     // console.log(`articles body: ${req.body}`);
     // console.log("test body");
     // console.log(req.body);
-    var newBody = req.body.temp;
+    var newBody = req.body.articles;
     // console.log("newbody");
     // console.log(newBody);
 
     db.Article.bulkCreate(JSON.parse(newBody)).then(function (dbArticle) {
+      // console.log(`bulk articles: ${JSON.stringify(dbArticle)}`);
       res.json(dbArticle);
     });
   });
@@ -142,7 +144,7 @@ module.exports = function (app) {
         sources: "fox-news,cnn,the-washington-post,bbc-news,bloomberg,the-huffington-post,the-washington-times,reuters,the-hill,the-new-york-times,associated-press",
         language: "en",
         // country: "us",
-        pageSize: 10
+        pageSize: 5
       })
       .then(function (response) {
         var articles = response.articles;
