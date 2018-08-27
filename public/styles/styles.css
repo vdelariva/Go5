@@ -66,6 +66,9 @@ h3 {
 }
 .imageBorder {
   border: 3px groove rgb(243, 241, 241);
+  top:14px;bottom:14px;left:0;right:0;
+  box-shadow:-4px -6px 25px 3px rgb(90, 90, 90);
+  border-radius:100px/10px;
 }
 .card-body, .card-header, .modal-content {
   background-image: url("../images/background.png");
@@ -99,8 +102,11 @@ footer {
   margin-right: -20px;
   margin-left: -20px;
 }
-.shadow-left {
-  box-shadow: -3px 0 10px -1px #333;
+.shadow-left { 
+  top:14px;bottom:14px;left:0;right:0;
+  box-shadow:0 0 25px 3px #333;
+  border-radius:100px/10px;
+  z-index:-1;
 }
 .card-style {
   font-family: 'Sriracha', cursive;
@@ -110,6 +116,7 @@ footer {
 .article {
   font-size: 17px;
   font-family: 'Sriracha', cursive;
+  cursor: pointer;
 }
 .modal-body {
   font-size: 16px;
