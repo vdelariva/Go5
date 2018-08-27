@@ -1,6 +1,8 @@
+// Global variables
+var articleID = 0;
+var sourceMap = new Map();
+
 $(document).ready(function () {
-  var articleID = 0;
-  var sourceMap = new Map();
   //API CODE
   //-----------------------------------------------------------------------------
   $(".alignRight").html(moment().format('dddd, MMMM Do, YYYY'));
@@ -67,7 +69,6 @@ $(document).ready(function () {
       }
     });
   });
-
   //-----------------------------------------------------------------------------
   $(document).on("click", ".article", function (event) {
     event.preventDefault();
@@ -133,7 +134,6 @@ $(document).ready(function () {
         $("#articleText").html(`<b>Source: </b>${articleSource} <span style="float:right"><b>Published Date: </b>${moment(articleDate).format("MMM Do YYYY")}</span><br><br>`
         + `<b>Article: </b>${articleText}`
         + `<br><hr>`);
-      // return;
       }
     });
   });
@@ -195,14 +195,11 @@ $(document).ready(function () {
       }).then(function (data) {
         console.log(`ReviewSaved: ${JSON.stringify(data)}`);
       });
-
-      // values captured. Now I need to take these values and assign them to the article
-      // Commented this out, we want to show the rating on the headline line with updated aggregate rating
-      // articleRating(review.finalRating);
     } else {
       $('.alert').show();
       return false;
-    } 
+    }
+    location.reload(); 
   });
   //-----------------------------------------------------------------------------
   // Close alert - Unable to find in modal, needs to search the entire document 
@@ -210,116 +207,114 @@ $(document).ready(function () {
     event.preventDefault();
     $('.alert').hide();
   });
-  //-----------------------------------------------------------------------------
-  // Functions
-  //-----------------------------------------------------------------------------
-  function validateForm() {
-    var isValid = true;
-    $('.percentage').each(function () {
-      if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
-        isValid = false;
-      } 
-    });
-    return isValid;
-  }
-  //-----------------------------------------------------------------------------
-  function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
-    var rating = (currency + relevance + authority + accuracy + purpose) / 5;
-    return rating;
-  }
-  //-----------------------------------------------------------------------------
-  // Get all reviews for a specific article
-  function getAllArticleReviews(articleId){
-    var rating = 0;
-
-    $.when($.ajax({
-      method: "GET",
-      url: `/api/reviews/article/${articleId}`
-    })).then(function (data) {
-      console.log(`Reviews: ${data}`);
-      if (data.length !== 0){
-        // display rating
-        for (var i=0; i < data.length; i++) {
-          rating += parseInt(data[i].finalRating);
-        }
-        rating = rating/data.length;
-        console.log(`cumRating: ${rating}`);
-        return rating;
-      }
-      return rating;
-    });
-  }
-  //-----------------------------------------------------------------------------
-  // function articleRating(finalRating) {
-  //   if (finalRating >= 8) {
-  //     $("#rating").html("<img src='../images/credibleSmall.jpg'>");
-  //     return;
-  //   } else if (finalRating < 8 && finalRating >= 6) {
-  //     $("#rating").html("<img src='../images/approvedSmall.jpg'>");
-  //     return;
-  //   } else if (finalRating < 6 && finalRating >= 4) {
-  //     $("#rating").html("<img src='../images/misleadingSmall.jpg'>");
-  //     return;
-  //   } else {
-  //     $("#rating").html("<img src='../images/fakenewsSmall.jpg'>");
-  //     return;
-  //   }
-  // }
-  //-----------------------------------------------------------------------------
-  function displayArticles(data, displayDate) {
-    console.log(`displayArticles data: ${JSON.stringify(data)})`);
-    console.log(sourceMap);
-    var $articles = data.map(function (article) {
-      // var $li = $("<li>").html(`${article.title}`)
-      var rating = getAllArticleReviews(article.id);
-      if (rating === 0){
-        rating = "None";
-      }
-      var $li = $("<li>").html(`<b>${sourceMap.get(article.SourceId)}:</b> ${article.title}<span style="float:right"><b>Rating: </b>${rating}</span>`)
-        .attr({
-          "data-toggle": "modal",
-          "data-target": "#myModal",
-          "data-id": article.id,
-          "class": "article",
-          "data-url": article.articleURL
-        });
-      return $li;
-    });
-    $("#headlines").html(`<i class="fa fa-angle-down rotate-icon"></i> Headlines for: ${displayDate}`);
-    $("#currentArticles").empty();
-    $("#currentArticles").append($articles);
-  }
-  //-----------------------------------------------------------------------------
-  // Get article text using diffbot api
-  function getArticleText(data) {
-    data.forEach(function (article) {
-      var queryURL =
-        "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
-        article.articleURL;
-      console.log(`URL: ${queryURL}`);
-      $.when($.ajax({
-        url: queryURL,
-        method: "GET"
-      })).then(function (response) {
-        console.log(`diffbot response: ${response.objects[0].text}`);
-        console.log(`******* data: ${JSON.stringify(data)}`);
-        console.log(`dataId: ${article.id}`);
-        addArticleText(response.objects[0].text, article.id);
-      });
-    });
-  }
-  //-----------------------------------------------------------------------------
-  function addArticleText(articleText, id) {
-    // Update article entry in db with article text
-    // console.log(`addArticle id: ${id}`);
-    console.log(`addArticle articleText: ${articleText}`);
-    $.ajax({
-      method: "PUT",
-      url: `/api/article/${id}`,
-      data: { articleText: articleText }
-    }).then(function (data) {
-      console.log(`ArticleText save: ${JSON.stringify(data)}`);
-    });
-  }
-  //-----------------------------------------------------------------------------
 });
+
+//-----------------------------------------------------------------------------
+// Functions
+//-----------------------------------------------------------------------------
+function validateForm() {
+  var isValid = true;
+  $('.percentage').each(function () {
+    if ($(this).val() === "" || ($(this).val() > 10) || ($(this).val() < 1)) {
+      isValid = false;
+    } 
+  });
+  return isValid;
+}
+//-----------------------------------------------------------------------------
+function calculateFinalRating(currency, relevance, authority, accuracy, purpose) {
+  var rating = (currency + relevance + authority + accuracy + purpose) / 5;
+  return rating;
+}
+//-----------------------------------------------------------------------------
+function displayArticles(data, displayDate) {
+  console.log(`displayArticles data: ${JSON.stringify(data)})`);
+  console.log(sourceMap);
+  var $articles = data.map(function (article) {
+    console.log(article);
+
+    var $li = $("<li>").html(`<b>${sourceMap.get(article.SourceId)}:</b> ${article.title}<span class="ratings" data-articleid=${article.id} style="float:right"></span>`)
+      .attr({
+        "data-toggle": "modal",
+        "data-target": "#myModal",
+        "data-id": article.id,
+        "class": "article",
+        "data-url": article.articleURL
+      });
+    return $li;
+  });
+  $("#headlines").html(`<i class="fa fa-angle-down rotate-icon"></i> Headlines for: ${displayDate}`);
+  $("#currentArticles").empty();
+  $("#currentArticles").append($articles);
+
+  displayReviews(data);
+}
+//-----------------------------------------------------------------------------
+// Get article text using diffbot api
+function getArticleText(data) {
+  data.forEach(function (article) {
+    var queryURL =
+      "https://api.diffbot.com/v3/article?token=" + "0150e312d481dd56d0cbd136243d2bc4" + "&url=" +
+      article.articleURL;
+    console.log(`URL: ${queryURL}`);
+    $.when($.ajax({
+      url: queryURL,
+      method: "GET"
+    })).then(function (response) {
+      console.log(`diffbot response: ${response.objects[0].text}`);
+      console.log(`******* data: ${JSON.stringify(data)}`);
+      console.log(`dataId: ${article.id}`);
+      addArticleText(response.objects[0].text, article.id);
+    });
+  });
+}
+//-----------------------------------------------------------------------------
+function addArticleText(articleText, id) {
+  // Update article entry in db with article text
+  // console.log(`addArticle id: ${id}`);
+  console.log(`addArticle articleText: ${articleText}`);
+  $.ajax({
+    method: "PUT",
+    url: `/api/article/${id}`,
+    data: { articleText: articleText }
+  }).then(function (data) {
+    console.log(`ArticleText save: ${JSON.stringify(data)}`);
+  });
+}
+//-----------------------------------------------------------------------------
+// Get all reviews for a specific article
+function getAllArticleReviews(articleId, callback){
+  var rating = 0;
+
+  $.when($.ajax({
+    method: "GET",
+    url: `/api/reviews/article/${articleId}`
+  })).then(function (data){
+  //console.log(`Reviews: ${data}`);
+    if (data.length !== 0) {
+      // display rating
+      for (var i = 0; i < data.length; i++) {
+        rating += parseInt(data[i].finalRating);
+      }
+      rating = rating / data.length;
+      //console.log(`cumRating: ${rating}`);
+      callback(rating);
+    }
+    callback(rating);
+  });
+}
+//-----------------------------------------------------------------------------
+//Display ratings for all articles
+function displayReviews(data){
+  var currentArticle;
+  data.forEach(function (article){
+    getAllArticleReviews(article.id, function (ratingVal){
+      if (ratingVal !== 0){
+        currentArticle = $(`[data-articleid=${article.id}]`);
+        console.log("Current Article: "+currentArticle.text);
+        console.log("Rating for article: "+article.id+" = "+ratingVal);
+        currentArticle.html('<b>Rating: </b>'+ratingVal);
+      }
+    });
+  });
+}
