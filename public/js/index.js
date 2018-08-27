@@ -238,7 +238,7 @@ function displayArticles(data, displayDate) {
         "data-toggle": "modal",
         "data-target": "#myModal",
         "data-id": article.id,
-        "class": "article",
+        "class": "article mb-3",
         "data-url": article.articleURL
       });
     return $li;
