@@ -1,42 +1,34 @@
 # Cred-Checker Daily
 
-## Group Project Description: ##
+## Group Project ##
 
 **Description**
 
-One or two sentences summarizing your project. This should be moreinteresting than technical.
+Fake news here! Fake news there! Fake news everywhere! Our world is constantly feeding us news that just doesn't make the honesty cut. So here at the Cred-Checker Daily, we decided to hold the fake news participants accountable by creating a product that allows users to assign a score to the articles they read and displaying the cumulative results to the world.
 
-**Motivation**
-
- Two or three sentences describing the problem the project solves.
- 
 **Results** 
 
-One or two sentences describing the end result—in other words.
-
-**Team Efforts** 
-
-Describe how you delegated work amongst your team members.
-
-**Individual Responsibilities**
-
-Describe what you contributed to the project as anindividual—in other words, the parts of the project that you were accountable for. 
+* Pull news data from two API's working synergistically together
+* Store data from API calls into database
+* Display article information, including text, from database
+* Listing of Today's Top Headlines
+* Show credibility ratings for all reviewed articles
+* User submits a 1-10 rating for each article along with comments
+* Search for articles by date
+* Display modal upon click of an article
 
 **Challenges** 
 
-Describe any challenges you and/or your team encounteredthat you personally played an important role in resolving.
+* As a result of the asychronous response of the multiple apis, the application did not always have the necessary information available when needed.
+* Circular Relationships between Article-Source-Review models causing sequelize to throw errors. We resolved by relating them linearly
+* Higher response times of Diffbot api made app to load slower for first user
 
 **Improvements** 
 
-Describe changes you would make going forward. These can be changes you’d make for better scalability; additional features you’d add; improvements you’d make to the codebase; etc.
-
 1. Show Credibility Ratings for each source
 1. Clean up code, incorporate more handlebars to simplify dynamic html
-
-**Functionality:**
-* List Today's Top Headlines
-* Show credibility ratings for all reviewed articles
-* Display article text, allow user to rate article
+1. User logins to eventually give credibility ratings to other users
+1. Allow users to view the comments made by other users
 
 ## Tools ##
 
