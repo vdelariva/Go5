@@ -6,10 +6,12 @@
 
 Fake news here! Fake news there! Fake news everywhere! Our world is constantly feeding us news that just doesn't make the honesty cut. So here at the Cred-Checker Daily, we decided to hold the fake news participants accountable by creating a product that allows users to assign a score to the articles they read and displaying the cumulative results to the world.
 
-**Results** 
+Link to app deployed on Heroku: [peaceful-peak-29172](https://peaceful-peak-29172.herokuapp.com/)
+
+**Application Flow** 
 
 * Pull news data from two API's working synergistically together
-* Store data from API calls into database
+* Stores data from API calls into database
 * Display article information, including text, from database
 * Listing of Today's Top Headlines
 * Show credibility ratings for all reviewed articles
